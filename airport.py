@@ -1,15 +1,15 @@
-from operator import ge
+import argparse
+import json
+from datetime import datetime
+
 import requests
+from rich import print
 from rich.prompt import Prompt
 from rich.console import Console
-import argparse
-
-import json
-from rich import print
 from rich.table import Table
 from rich.progress import track
-from datetime import datetime
 from rich.traceback import install
+
 install()
 
 console = Console(record=True)
@@ -28,7 +28,9 @@ def load_weather_for_location(lat: str, lng: str) -> dict:
     """Given a location, load the current weather for that location"""
 
     response = requests.get(
-        f"http://api.weatherapi.com/v1/current.json?q={lat},{lng}&key={WEATHER_API_KEY}")
+        f"http://api.weatherapi.com/v1/current.json?q=\
+            {lat},{lng}&key={WEATHER_API_KEY}",
+        timeout=10)
 
     response.raise_for_status()
 
@@ -86,7 +88,9 @@ def get_flights_from_iata(iata: str) -> list:
     """Given an IATA get the flights that are departing from that airport from Airlabs"""
 
     response = requests.get(
-        f"https://airlabs.co/api/v9/schedules?dep_iata={iata}&api_key={FLIGHT_API_KEY}")
+        f"https://airlabs.co/api/v9/schedules?dep_iata=\
+            {iata}&api_key={FLIGHT_API_KEY}",
+        timeout=10)
 
     response.raise_for_status()
 
